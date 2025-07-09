@@ -8,11 +8,15 @@
 - création d'un fiche requirement pour les librairies:  pip freeze > requirements.txt
 - création d'un projet django : django-admin startproject conf 
 ```
-install quelques librairies:    
-        - pip install python-decouple==3.8
-        - pip install Unipath==1.1
-        - pip install dj-database-url==2.3.0 
-        - mettre le requirements a jour avec la cmd si dessus
+
+install quelques librairies:  
+
+```   
+- pip install python-decouple==3.8
+- pip install Unipath==1.1
+- pip install dj-database-url==2.3.0 
+- mettre le requirements a jour avec la cmd si dessus
+```
 # Different configuration step
         
 ### Voici le lien pour les différents étape a suivre
