@@ -1,0 +1,105 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class="auth-container d-flex align-items-center justify-content-center p-4">
+    <div class="card auth-card" style="width: 100%; max-width: 500px;">
+        <div class="card-body p-5">
+            <!-- En-tête -->
+            <div class="text-center mb-4">
+                <i class="fas fa-user-plus fa-4x text-primary mb-3"></i>
+                <h3 class="card-title">{% trans "Inscription" %}</h3>
+                <p class="text-muted">{% trans "Créez votre compte gratuitement" %}</p>
+            </div>
+
+            <!-- Messages d'erreur globaux -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Formulaire -->
+            <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+                
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                        <i class="fas fa-envelope me-2"></i>{{ form.email.label }}
+                    </label>
+                    {% render_field form.email class="form-control" placeholder="exemple@email.com" %}
+                    {% if form.email.errors %}
+                        <div class="invalid-feedback d-block">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            {{ form.email.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Mot de passe -->
+                <div class="mb-3">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock me-2"></i>{{ form.password1.label }}
+                    </label>
+                    {% render_field form.password1 class="form-control" placeholder="Mot de passe" %}
+                    {% if form.password1.errors %}
+                        <div class="invalid-feedback d-block">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            {{ form.password1.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Confirmation mot de passe -->
+                <div class="mb-3">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock me-2"></i>{{ form.password2.label }}
+                    </label>
+                    {% render_field form.password2 class="form-control" placeholder="Confirmez votre mot de passe" %}
+                    {% if form.password2.errors %}
+                        <div class="invalid-feedback d-block">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            {{ form.password2.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Conditions d'utilisation -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="terms" required>
+                        <label class="form-check-label small" for="terms">
+                            {% trans "J'accepte les " %}
+                            <a href="#" class="text-decoration-none">{% trans "conditions d'utilisation" %}</a>
+                            {% trans " et la " %}
+                            <a href="#" class="text-decoration-none">{% trans "politique de confidentialité" %}</a>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Bouton d'inscription -->
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                    <i class="fas fa-user-plus me-2"></i>
+                    {% trans "Créer mon compte" %}
+                </button>
+            </form>
+
+            <!-- Lien vers connexion -->
+            <div class="text-center">
+                <hr class="my-4">
+                <p class="mb-0">
+                    {% trans "Déjà un compte ?" %} 
+                    <a href="{% url 'account_login' %}" class="text-decoration-none fw-bold">
+                        {% trans "Se connecter" %}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -32,8 +32,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.sites',
+    
 
 # app pour django-allauth
+    'widget_tweaks',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -41,10 +43,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.telegram', # ce provider sert a authentification via Telegram
     'allauth.socialaccount.providers.facebook', # ce provider sert a authentification via Facebook
 
-    
-# app personnelles
-    'accounts',
-    'wathup',
+# app personnel
+    'log' 
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -53,6 +53,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
     
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,7 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -104,6 +106,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -131,6 +134,8 @@ CACHES = {
     }
 }
 
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -149,6 +154,11 @@ LANGUAGES = (
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale')
 ]
+
+ACCOUNT_FORMS = {
+    'login': 'log.forms.BootstrapLoginForm',
+    'signup': 'log.forms.BootstrapSignupForm',
+}
 
 USE_L10N = True
 
@@ -179,10 +189,28 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
-PROJECT_NAME = 'watHup_auth'
-
-
 LOCAL_DEV = config('LOCAL_DEV', default=False, cast=bool)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = 'wathup:home'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGIN_REDIRECT_URL = 'home'
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
+SOCIALACCOUNT_QUERY_EMAIL = True
+
+ACCOUNT_SESSION_REMEMBER = True
+
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+# Configuration allauth
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
