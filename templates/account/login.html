@@ -1,7 +1,7 @@
 {% extends "account/base.html" %}
 {% load i18n %}
 {% load widget_tweaks %}
-
+{% load socialaccount %}
 
 {% block title %}Connexion{% endblock %}
 
@@ -20,25 +20,89 @@
             {% if form.non_field_errors %}
                 <div class="alert alert-danger" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    {{ form.non_field_errors }}
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Providers sociaux -->
+            {% get_providers as socialaccount_providers %}
+            {% if socialaccount_providers %}
+                <div class="social-login mb-4">
+                    <div class="text-center mb-3">
+                        <small class="text-muted">{% trans "Connexion rapide avec" %}</small>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        {% for provider in socialaccount_providers %}
+                            {% if provider.id == "google" %}
+                                <a href="{% provider_login_url provider.id %}" class="btn btn-outline-danger btn-lg">
+                                    <i class="fab fa-google me-2"></i>
+                                    {% trans "Continuer avec Google" %}
+                                </a>
+                            {% elif provider.id == "facebook" %}
+                                <a href="{% provider_login_url provider.id %}" class="btn btn-outline-primary btn-lg">
+                                    <i class="fab fa-facebook-f me-2"></i>
+                                    {% trans "Continuer avec Facebook" %}
+                                </a>
+                            {% elif provider.id == "github" %}
+                                <a href="{% provider_login_url provider.id %}" class="btn btn-outline-dark btn-lg">
+                                    <i class="fab fa-github me-2"></i>
+                                    {% trans "Continuer avec GitHub" %}
+                                </a>
+                            {% elif provider.id == "twitter" %}
+                                <a href="{% provider_login_url provider.id %}" class="btn btn-outline-info btn-lg">
+                                    <i class="fab fa-twitter me-2"></i>
+                                    {% trans "Continuer avec Twitter" %}
+                                </a>
+                            {% elif provider.id == "linkedin" %}
+                                <a href="{% provider_login_url provider.id %}" class="btn btn-outline-primary btn-lg">
+                                    <i class="fab fa-linkedin-in me-2"></i>
+                                    {% trans "Continuer avec LinkedIn" %}
+                                </a>
+                            {% elif provider.id == "microsoft" %}
+                                <a href="{% provider_login_url provider.id %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fab fa-microsoft me-2"></i>
+                                    {% trans "Continuer avec Microsoft" %}
+                                </a>
+                            {% else %}
+                                <a href="{% provider_login_url provider.id %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    {% trans "Continuer avec" %} {{ provider.name }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Séparateur -->
+                    <div class="text-center my-4">
+                        <div class="position-relative">
+                            <hr>
+                            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">
+                                {% trans "ou" %}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             {% endif %}
 
             <!-- Formulaire -->
-            <form method="post" action="{% url 'account_login' %}">
+            <form method="post" action="{% url 'account_login' %}" novalidate>
                 {% csrf_token %}
+                
                 <!-- Champ Email/Username -->
                 <div class="mb-3">
                     <label for="{{ form.login.id_for_label }}" class="form-label">
                         <i class="fas fa-envelope me-2"></i>{{ form.login.label }}
                     </label>
-                    
-                    {{ form.login }}
-
+                    {% render_field form.login class="form-control form-control-lg" placeholder="Email ou nom user" autofocus="true" required="true" %}
                     {% if form.login.errors %}
                         <div class="invalid-feedback d-block">
                             <i class="fas fa-exclamation-circle me-1"></i>
-                            {{ form.login.errors.0 }}
+                            {% for error in form.login.errors %}
+                                {{ error }}
+                            {% endfor %}
                         </div>
                     {% endif %}
                 </div>
@@ -48,11 +112,13 @@
                     <label for="{{ form.password.id_for_label }}" class="form-label">
                         <i class="fas fa-lock me-2"></i>{{ form.password.label }}
                     </label>
-                    {% render_field form.password class="form-control form-control-lg" placeholder="Votre mot de passe" %}
+                    {% render_field form.password class="form-control form-control-lg" placeholder="Votre mot de passe" required="true" %}
                     {% if form.password.errors %}
                         <div class="invalid-feedback d-block">
                             <i class="fas fa-exclamation-circle me-1"></i>
-                            {{ form.password.errors.0 }}
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
                         </div>
                     {% endif %}
                 </div>
@@ -60,10 +126,14 @@
                 <!-- Options -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="form-check">
-                        {% render_field form.remember class="form-check-input" %}
-                        <label class="form-check-label" for="{{ form.remember.id_for_label }}">
-                            {% trans "Se souvenir de moi" %}
-                        </label>
+                        {% with form.remember as remember_field %}
+                            {% if remember_field %}
+                                {% render_field remember_field class="form-check-input" %}
+                                <label class="form-check-label" for="{{ remember_field.id_for_label }}">
+                                    {% trans "Se souvenir de moi" %}
+                                </label>
+                            {% endif %}
+                        {% endwith %}
                     </div>
                     <a href="{% url 'account_reset_password' %}" class="text-decoration-none">
                         {% trans "Mot de passe oublié ?" %}
@@ -91,5 +161,51 @@
     </div>
 </div>
 
+<style>
+/* Styles pour améliorer l'apparence des boutons sociaux */
+.social-login .btn {
+    border-width: 2px;
+    font-weight: 500;
+}
 
+.social-login .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.social-login .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.social-login .btn-outline-primary:hover {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.social-login .btn-outline-dark:hover {
+    background-color: #212529;
+    border-color: #212529;
+}
+
+.social-login .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+}
+
+.social-login .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Animation pour les icônes */
+.social-login .btn i {
+    transition: transform 0.3s ease;
+}
+
+.social-login .btn:hover i {
+    transform: scale(1.1);
+}
+</style>
 {% endblock %}

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook', # ce provider sert a authentification via Facebook
 
 # app personnel
-    'log' 
+    'log',
+    'contact_us',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -64,8 +65,6 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_user_agents.middleware.UserAgentMiddleware',
     "allauth.account.middleware.AccountMiddleware",
 ]
 
@@ -214,3 +213,12 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# pour le formulaire de contact
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = 'CONTACT_EMAIL'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+CONTACT_EMAIL = 'contact@wathup.com'

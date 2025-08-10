@@ -2,22 +2,19 @@ from allauth.account.forms import LoginForm, SignupForm
 from django import forms
 
 class BootstrapLoginForm(LoginForm):
-    def __init__(self, *args, **kwargs):
+   def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # Ajouter les classes Bootstrap
+        
+        # Styling pour le champ login
         self.fields['login'].widget.attrs.update({
             'class': 'form-control form-control-lg',
             'placeholder': 'Email ou nom d\'utilisateur'
         })
         
+        # Styling pour le champ password
         self.fields['password'].widget.attrs.update({
             'class': 'form-control form-control-lg',
-            'placeholder': 'Mot de passe'
-        })
-        
-        self.fields['remember'].widget.attrs.update({
-            'class': 'form-check-input'
+            'placeholder': 'Votre mot de passe'
         })
 
 

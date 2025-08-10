@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Mon Site</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .contact-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 60px 0;
+        }
+        
+        .contact-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .contact-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .contact-form {
+            padding: 2rem;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        
+        .contact-info {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .contact-info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+        }
+        
+        .loading {
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="contact-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact-card">
+                        <div class="contact-header">
+                            <h2><i class="fas fa-envelope me-2"></i>Contactez-nous</h2>
+                            <p class="mb-0">Nous serions ravis d'avoir de vos nouvelles</p>
+                        </div>
+                        
+                        <div class="contact-form">
+                            <!-- Messages Django -->
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <!-- Informations de contact -->
+                            <div class="contact-info">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="contact-info-item">
+                                            <div class="contact-info-icon">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Téléphone</strong><br>
+                                                +237 690 060 003
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="contact-info-item">
+                                            <div class="contact-info-icon">
+                                                <i class="fas fa-envelope"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Email</strong><br>
+                                                contact@wathup.com
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Formulaire -->
+                            <form method="post" id="contactForm">
+                                {% csrf_token %}
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.nom.id_for_label }}" class="form-label">
+                                                <i class="fas fa-user me-1"></i>{{ form.nom.label }}
+                                            </label>
+                                            {{ form.nom }}
+                                            {% if form.nom.errors %}
+                                                {% for error in form.nom.errors %}
+                                                    <div class="error-message">{{ error }}</div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                                <i class="fas fa-envelope me-1"></i>{{ form.email.label }}
+                                            </label>
+                                            {{ form.email }}
+                                            {% if form.email.errors %}
+                                                {% for error in form.email.errors %}
+                                                    <div class="error-message">{{ error }}</div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.sujet.id_for_label }}" class="form-label">
+                                        <i class="fas fa-tag me-1"></i>{{ form.sujet.label }}
+                                    </label>
+                                    {{ form.sujet }}
+                                    {% if form.sujet.errors %}
+                                        {% for error in form.sujet.errors %}
+                                            <div class="error-message">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.message.id_for_label }}" class="form-label">
+                                        <i class="fas fa-comment me-1"></i>{{ form.message.label }}
+                                    </label>
+                                    {{ form.message }}
+                                    {% if form.message.errors %}
+                                        {% for error in form.message.errors %}
+                                            <div class="error-message">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                
+                                <button type="submit" class="btn btn-submit">
+                                    <span class="submit-text">
+                                        <i class="fas fa-paper-plane me-2"></i>Envoyer le message
+                                    </span>
+                                    <span class="loading">
+                                        <i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animation du formulaire
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('.btn-submit');
+            const submitText = submitBtn.querySelector('.submit-text');
+            const loadingText = submitBtn.querySelector('.loading');
+            
+            submitText.style.display = 'none';
+            loadingText.style.display = 'inline';
+            submitBtn.disabled = true;
+        });
+        
+        // Validation côté client
+        const form = document.getElementById('contactForm');
+        const inputs = form.querySelectorAll('.form-control');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+            
+            input.addEventListener('input', function() {
+                if (this.classList.contains('is-invalid')) {
+                    validateField(this);
+                }
+            });
+        });
+        
+        function validateField(field) {
+            const value = field.value.trim();
+            
+            // Supprimer les classes précédentes
+            field.classList.remove('is-valid', 'is-invalid');
+            
+            if (field.type === 'email') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (value && emailRegex.test(value)) {
+                    field.classList.add('is-valid');
+                } else if (value) {
+                    field.classList.add('is-invalid');
+                }
+            } else if (field.required && value) {
+                field.classList.add('is-valid');
+            } else if (field.required && !value) {
+                field.classList.add('is-invalid');
+            }
+        }
+        
+        // Animation des éléments au scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideInUp 0.6s ease-out';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.contact-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+    
+    <style>
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-control.is-valid {
+            border-color: #28a745;
+        }
+        
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+    </style>
+</body>
+</html>
